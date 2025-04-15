@@ -62,7 +62,7 @@ int main(){
             }
             else
             {
-                //tarea = buscarPorPalabra(TareasPendientes);
+                tarea = buscarPorPalabra(TareasPendientes);
             }
         }
         else{
@@ -72,7 +72,7 @@ int main(){
             }
             else
             {
-                //tarea = buscarPorPalabra(TareasRealizadas);
+                tarea = buscarPorPalabra(TareasRealizadas);
             }
         }
         
@@ -130,7 +130,7 @@ Lista cargaTareas(Lista L){
 void mostrar(Lista L){
     if (esListaVacia(L) == 1)
     {
-        printf("No hay tareas pendientes");
+        printf("No hay tareas");
     }
     else{ 
         Lista aux;
@@ -155,10 +155,10 @@ Lista cargarRealizadas(Lista L1,Lista L2){
     mostrar(L1);
     do
     {   
-        tarea = buscarPorID(L1);
+        tarea = buscarPorID(L1); //busca el nodo
         if (tarea.TareaID != -1)
         {
-            Lista aux = QuitarNodo(L1,tarea);
+            Lista aux = QuitarNodo(L1,tarea); //desvincula el nodo de la lista de tareas pendientes
             if (aux != NULL)
             {
                 aux->Siguiente = L2;
@@ -207,7 +207,6 @@ Tarea buscarPorID(Lista L){
         Tarea vacia = {-1,NULL,0};
         return vacia;
     }
-    
 }
 
 
