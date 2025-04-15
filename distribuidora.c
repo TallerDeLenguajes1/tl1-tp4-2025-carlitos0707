@@ -26,7 +26,7 @@ int tamanio(Lista L);
 void mostrar(Lista L);
 Lista  QuitarNodo(Lista  L, Tarea dato);
 Tarea buscarPorID(Lista L);
-//Tarea buscarPorPalabra(Lista L);
+Tarea buscarPorPalabra(Lista L);
 Lista cargarRealizadas(Lista L1,Lista L2);
 
 
@@ -44,7 +44,7 @@ int main(){
     mostrar(TareasPendientes);
     printf("\n\n\nTareas completadas\n\n\n");
     mostrar(TareasRealizadas);
-    /*do
+    do
     {
         printf("\n\n\nSeleccione una opcion\n\n\n");
         printf("\t 0. Tareas pendientes\n");
@@ -76,7 +76,7 @@ int main(){
             }
         }
         
-    } while (op == 0);*/
+    } while (op == 0);
     return 0;
 }
 
@@ -89,10 +89,10 @@ Lista crearLista(){
 int esListaVacia(Lista L){
     if (L == NULL)
     {
-        return 0;
+        return 1;
     }
     else{
-        return 1;
+        return 0;
     }
     
 }
@@ -128,14 +128,14 @@ Lista cargaTareas(Lista L){
 
 
 void mostrar(Lista L){
-    if (esListaVacia(L) == 0)
+    if (esListaVacia(L) == 1)
     {
         printf("No hay tareas pendientes");
     }
     else{ 
         Lista aux;
         aux = L;
-        while(esListaVacia(aux) == 1){
+        while(esListaVacia(aux) == 0){
             printf("\n\n*******Tarea: %d*******\n\n",aux->T.TareaID);
             printf("\tDuracion: %d Hs\n\n",aux->T.Duracion);
             printf("\tDescripcion: ");
@@ -145,16 +145,6 @@ void mostrar(Lista L){
     }
 }
 
-int tamanio(Lista L){
-    Lista aux = L;
-    int cont=0;
-    while (esListaVacia(aux) == 1)
-    {
-        cont++;
-        aux = aux->Siguiente;
-    }
-    return cont;
-}
 
 
 
@@ -186,7 +176,7 @@ Lista cargarRealizadas(Lista L1,Lista L2){
 
 Lista  QuitarNodo(Lista  L, Tarea dato){
     Lista * aux = &L;
-    while (esListaVacia(*aux) == 1 && (*aux)->T.TareaID != dato.TareaID){
+    while (esListaVacia(*aux) == 0 && (*aux)->T.TareaID != dato.TareaID){
         aux = &(*aux)->Siguiente;
     }
     if(*aux){
@@ -221,19 +211,23 @@ Tarea buscarPorID(Lista L){
 }
 
 
-/*Tarea buscarPorPalabra(Lista L){
-    Lista aux;
+Tarea buscarPorPalabra(Lista L){
+    Lista aux = L;
     char palabra[50];
     printf("Ingrese una palabra\n");
     fflush(stdin);
     gets(palabra);
-    while (esListaVacia(aux) == 1)
+    while (esListaVacia(aux) == 0 && strstr(aux->T.Descripcion,palabra) == NULL)
     {
-        if (condition)
-        {
-            return aux->T;
-        }
-        aux
+        aux = aux->Siguiente;
     }
-    
-}*/
+    if (strstr(aux->T.Descripcion,palabra) != NULL)
+    {
+        return aux->T;
+    }
+    else{
+        printf("No se encontro la tarea\n");
+        Tarea vacia = {-1,NULL,0};
+        return vacia;
+    }
+}
