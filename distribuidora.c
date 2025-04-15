@@ -24,8 +24,9 @@ Lista cargaTareas(Lista L);
 int esListaVacia(Lista L);
 int tamanio(Lista L);
 void mostrar(Lista L);
-Tarea buscarPorID(Lista L, short int id);
-Tarea buscarPorPalabra(Lista L);
+Lista  QuitarNodo(Lista  L, Tarea dato);
+Tarea buscarPorID(Lista L);
+//Tarea buscarPorPalabra(Lista L);
 Lista cargarRealizadas(Lista L1,Lista L2);
 
 
@@ -39,9 +40,11 @@ int main(){
     TareasPendientes = cargaTareas(TareasPendientes);
     TareasRealizadas = crearLista();
     TareasRealizadas = cargarRealizadas(TareasPendientes,TareasRealizadas);
+    printf("\n\n\nTareas pendientes\n\n\n");
     mostrar(TareasPendientes);
+    printf("\n\n\nTareas completadas\n\n\n");
     mostrar(TareasRealizadas);
-    do
+    /*do
     {
         printf("\n\n\nSeleccione una opcion\n\n\n");
         printf("\t 0. Tareas pendientes\n");
@@ -50,7 +53,7 @@ int main(){
         printf("\n\nSeleccione una operacion\n\n");
         printf("\t 0. busqueda por ID\n");
         printf("\t 1. busqueda por palabra");
-        scanf("%d",busqueda);
+        scanf("%d",&busqueda);
         if (t == 0)
         {
             if (busqueda == 0)
@@ -59,7 +62,7 @@ int main(){
             }
             else
             {
-                tarea = buscarPorPalabra(TareasPendientes);
+                //tarea = buscarPorPalabra(TareasPendientes);
             }
         }
         else{
@@ -69,12 +72,12 @@ int main(){
             }
             else
             {
-                tarea = buscarPorPalabra(TareasRealizadas);
+                //tarea = buscarPorPalabra(TareasRealizadas);
             }
         }
         
-    } while (op == 0);
-    
+    } while (op == 0);*/
+    return 0;
 }
 
 
@@ -109,7 +112,7 @@ Lista cargaTareas(Lista L){
         printf("Ingrese la descripcion del producto\n");
         fflush(stdin);
         gets(desc);
-        nuevo->T.Descripcion = (char *)malloc(sizeof(char) * strlen(desc));
+        nuevo->T.Descripcion = (char *)malloc(sizeof(char) * (strlen(desc) + 1));
         strcpy(nuevo->T.Descripcion,desc);
         nuevo->Siguiente = L;
         L = nuevo;
@@ -161,41 +164,76 @@ Lista cargarRealizadas(Lista L1,Lista L2){
     printf("\n\n\nLista de tareas pendientes\n\n\n");
     mostrar(L1);
     do
-    {      
+    {   
+        tarea = buscarPorID(L1);
+        if (tarea.TareaID != -1)
+        {
+            Lista aux = QuitarNodo(L1,tarea);
+            if (aux != NULL)
+            {
+                aux->Siguiente = L2;
+                L2 = aux;
+            }
+        }
         printf("Cargar otra tarea\n\n");
         printf("\t 0. SI\n");
         printf("\t 1. NO\n");
         scanf("%d",&op);
     } while (op == 0);
-    
+    return L2;
+}
+
+
+Lista  QuitarNodo(Lista  L, Tarea dato){
+    Lista * aux = &L;
+    while (esListaVacia(*aux) == 1 && (*aux)->T.TareaID != dato.TareaID){
+        aux = &(*aux)->Siguiente;
+    }
+    if(*aux){
+        Lista temp = *aux;
+        *aux = (*aux)->Siguiente;
+        temp->Siguiente = NULL;
+        return temp;
+    }
+    return NULL;
 }
 
 
 Tarea buscarPorID(Lista L){
     Lista aux = L;
     int id;
-    do
-        {
-            printf("\n\nSeleccione el ID de la tarea completada\n\n");
-            scanf("%d",&id);
-            if (id > tamanio(L))
-            {
-                printf("No se pudo encontrar la tarea\n");
-            }
-            if (id < 0)
-            {
-                printf("ID Invalido \n");
-            }                       
-        } while (id < 0 || id > tamanio(L));
-    for (int i = 0; i < id; i++)
+    printf("Ingrese un ID\n");
+    scanf("%d",&id);
+    while (esListaVacia(L) == 1 && aux->T.TareaID != id)
     {
         aux = aux->Siguiente;
     }
-    return aux->T;
+    if (aux->T.TareaID == id)
+    {
+        return aux->T;
+    }
+    else{
+        printf("Tarea no encontrada\n");
+        Tarea vacia = {-1,NULL,0};
+        return vacia;
+    }
+    
 }
 
 
-Tarea buscarPorPalabra(Lista L){
+/*Tarea buscarPorPalabra(Lista L){
     Lista aux;
+    char palabra[50];
     printf("Ingrese una palabra\n");
-}
+    fflush(stdin);
+    gets(palabra);
+    while (esListaVacia(aux) == 1)
+    {
+        if (condition)
+        {
+            return aux->T;
+        }
+        aux
+    }
+    
+}*/
